@@ -4,40 +4,236 @@
     <h1 class="title">Control Home</h1>
     <span class="eslogan">Seguridad e innovación para tu hogar</span>
   </div>
-  <div class="container_menu">
-    <img src="/menu.svg" alt="Menú" class="menu_icon"/>
+  <div id="menuIcon" class="container_menu">
+    <img src="/menu.svg" alt="Menú" />
   </div>
+  <nav class="nav_pc">
+    <ul>
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#">Tienda</a></li>
+      <li><a href="#">Contáctenos</a></li>
+    </ul>
+  </nav>
 </header>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuIcon = document.getElementById("menuIcon");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const closeButton = document.querySelector(".close_btn");
+
+    menuIcon?.addEventListener("click", () => {
+      mobileMenu?.classList.add("active");
+      mobileMenu?.classList.remove("closing");
+      menuIcon.style.marginTop = "-400px";
+    });
+    closeButton?.addEventListener("click", () => {
+      mobileMenu?.classList.add("closing");
+      if (!menuIcon) return; // ts menuIcon puede ser null
+      menuIcon.style.marginTop = "0";
+      setTimeout(() => {
+        mobileMenu?.classList.remove("active");   
+        mobileMenu?.classList.remove("closing");
+      }, 500);
+    });
+  });
+</script>
+
+<div class="raya_pc"></div>
+
+<div id="mobileMenu" class="mobile_menu">
+  <button class="close_btn">✖</button>
+  <nav>
+    <ul>
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#">Tienda</a></li>
+      <li><a href="#">Contáctenos</a></li>
+    </ul>
+  </nav>
+</div>
 
 <style>
   header {
     display: flex;
-    border: 1px solid #000;
+    justify-content: center;
+    border-bottom: 11px solid #016fb9e1;
+    padding: 0 15px;
+    margin: auto;
+    max-width: 1200px;
   }
 
   .picture {
-    width: 70px;
-    height: 70px;
+    width: 66px;
+    height: 66px;
     align-self: center;
-    margin: 0 20px;
+    margin-right: 20px;
+    border: 2px solid #6797c4;
   }
 
   .container_text {
-      margin: 4px 0;
-      margin-left: 20px;
+    margin-bottom: 15px;
+    justify-content: start;
   }
 
   .title {
-    font-size: 23px;
+    font-size: 21px;
+    margin-bottom: -2px;
   }
-  
+
   .eslogan {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .container_menu {
     align-self: center;
-    background: #329FD7;
-    padding: 5px;
+    align-items: center;
+    background: #329fd7;
+    padding: 8px;
+    display: flex;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .mobile_menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 100%;
+    background: #016fb9e1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    clip-path: circle(0% at 100% 0%);
+    transition: clip-path 0.5s ease-in-out;
+    padding-top: 200px;
+  }
+
+  .mobile_menu.active {
+    clip-path: circle(150% at 100% 0%);
+  }
+
+  .mobile_menu.closing {
+    clip-path: circle(0% at 100% 0%);
+  }
+
+  .mobile_menu nav ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+  }
+
+  .mobile_menu nav ul li {
+    margin: 20px 0;
+  }
+
+  .mobile_menu nav ul li a {
+    color: #fff;
+    font-size: 24px;
+    text-decoration: none;
+  }
+
+  .close_btn {
+    position: absolute;
+    top: 35px;
+    right: 25px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .mobile_menu.active {
+    width: 100%;
+    height: 100%;
+  }
+
+  .nav_pc {
+    display: none;
+  }
+
+  .raya_pc {
+    display: none;
+    width: 100%;
+    height: 11px;
+    background-color: #016fb9e1;
+    margin-top: 5px;
+  }
+
+  @media (min-width: 410px) {
+    .container_menu {
+      margin-right: 5px;
+    }
+  }
+
+  @media (min-width: 452px) {
+    header {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 15px;
+    }
+
+    .picture {
+      grid-column: 1;
+      display: block;
+      margin: auto;
+    }
+
+    .container_text {
+      grid-column: 2;
+    }
+
+    .container_menu {
+      grid-column: 3;
+    }
+  }
+
+  @media (min-width: 920px) {
+    header {
+      padding: 3px;
+      border-bottom: none;
+    }
+
+    .picture {
+      width: 80px;
+      height: 80px;
+    }
+
+    .title {
+      font-size: 24px;
+    }
+
+    .eslogan {
+      font-size: 16px;
+    }
+
+    .container_menu {
+      display: none;
+    }
+
+    .nav_pc {
+      display: block;
+      align-content: center;
+      margin-right: 15px;
+    }
+
+    .nav_pc ul {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      padding: 0;
+    }
+
+    .nav_pc a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .raya_pc {
+      display: block;
+    }
   }
 </style>
