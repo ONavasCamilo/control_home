@@ -16,29 +16,6 @@
   </nav>
 </header>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const menuIcon = document.getElementById("menuIcon");
-    const mobileMenu = document.getElementById("mobileMenu");
-    const closeButton = document.querySelector(".close_btn");
-
-    menuIcon?.addEventListener("click", () => {
-      mobileMenu?.classList.add("active");
-      mobileMenu?.classList.remove("closing");
-      menuIcon.style.marginTop = "-400px";
-    });
-    closeButton?.addEventListener("click", () => {
-      mobileMenu?.classList.add("closing");
-      if (!menuIcon) return; // ts menuIcon puede ser null
-      menuIcon.style.marginTop = "0";
-      setTimeout(() => {
-        mobileMenu?.classList.remove("active");   
-        mobileMenu?.classList.remove("closing");
-      }, 500);
-    });
-  });
-</script>
-
 <div class="raya_pc"></div>
 
 <div id="mobileMenu" class="mobile_menu">
@@ -51,6 +28,35 @@
     </ul>
   </nav>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const menuIcon = document.getElementById("menuIcon");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const closeButton = document.querySelector(".close_btn");
+
+    menuIcon?.addEventListener("click", () => {
+      mobileMenu?.classList.add("active");
+      mobileMenu?.classList.remove("closing");
+      menuIcon.style.marginTop = "-400px";
+      closeButton?.classList.remove('btn_hidden')
+    });
+
+    closeButton?.addEventListener("click", () => {
+      mobileMenu?.classList.add("closing");
+      if (!menuIcon) return;
+      menuIcon.style.marginTop = "0";
+      closeButton.classList.add('btn_hidden')
+    });
+
+    mobileMenu?.addEventListener("transitionend", () => {
+      if (mobileMenu.classList.contains("closing")) {
+        mobileMenu.classList.remove("active");
+        mobileMenu.classList.remove("closing");
+      }
+    });
+  });
+</script>
 
 <style>
   header {
@@ -143,6 +149,10 @@
     border: none;
     color: #fff;
     cursor: pointer;
+  }
+
+  .btn_hidden {
+    display: none;
   }
 
   .mobile_menu.active {

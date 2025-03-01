@@ -1,0 +1,131 @@
+<section>
+  <div id="slider-container" class="slider__container">
+    <div id="slider" class="slider">
+      <div class="slider__element slider__element--lightcoral">1</div>
+      <div class="slider__element slider__element--lightgreen">2</div>
+      <div class="slider__element slider__element--lightskyeblue">3</div>
+      <div class="slider__element slider__element--lightsalmon">4</div>
+    </div>
+  </div>
+  <div class="slider-buttons">
+    <button id="button-left" class="button button--left">{`<`}</button>
+    <button id="button-right" class="button button--right">{`>`}</button>
+  </div>
+</section>
+
+<script>
+  const sliderContainer = document.getElementById("slider-container");
+  const slider = document.getElementById("slider");
+  const buttonLeft = document.getElementById("button-left");
+  const buttonRight = document.getElementById("button-right");
+
+  const sliderElements = document.querySelectorAll(".slider__element");
+
+  const rootStyles = document.documentElement.style;
+
+  let slideCounter = 0;
+  let isInTransition = false;
+
+  const DIRECTION = {
+    RIGHT: "RIGHT",
+    LEFT: "LEFT",
+  } as const;
+
+  type DirectionType = keyof typeof DIRECTION;
+
+  const reorderSlide = () => {
+    const transformValue = getTransformValue();
+    rootStyles.setProperty("--transition", "none");
+    if (slideCounter === sliderElements.length - 1) {
+      if (!slider?.firstElementChild) return;
+      slider?.appendChild(slider.firstElementChild);
+      rootStyles.setProperty(
+        "--slide-transform",
+        `${transformValue + sliderElements[slideCounter].scrollWidth}px`
+      );
+      slideCounter--;
+    } else if (slideCounter === 0) {
+      if (!slider?.lastElementChild) return;
+      slider?.prepend(slider.lastElementChild);
+      rootStyles.setProperty(
+        "--slide-transform",
+        `${transformValue - sliderElements[slideCounter].scrollWidth}px`
+      );
+      slideCounter++;
+    }
+    isInTransition = false;
+  };
+
+  const getTransformValue = () =>
+    Number(rootStyles.getPropertyValue("--slide-transform").replace("px", "")); // convertimos a number y borramos 'px' para obtener valor dinamico
+
+  const moveSlide = (direction: DirectionType) => {
+    if (isInTransition) return;
+    const transformValue = getTransformValue();
+    rootStyles.setProperty("--transition", "transform 1s");
+    isInTransition = true;
+    if (direction === DIRECTION.LEFT) {
+      rootStyles.setProperty(
+        "--slide-transform",
+        `${transformValue + sliderElements[slideCounter].scrollWidth}px`
+      );
+      slideCounter--;
+    } else if (direction === DIRECTION.RIGHT) {
+      rootStyles.setProperty(
+        "--slide-transform",
+        `${transformValue - sliderElements[slideCounter].scrollWidth}px`
+      );
+      slideCounter++;
+    }
+  };
+
+  buttonRight?.addEventListener("click", () => moveSlide(DIRECTION.RIGHT));
+  buttonLeft?.addEventListener("click", () => moveSlide(DIRECTION.LEFT));
+
+  slider?.addEventListener("transitionend", reorderSlide);
+  reorderSlide();
+</script>
+
+<style>
+  :root {
+    --slide-transform: 0;
+    --transition: transform 1s;
+  }
+
+  .slider {
+    display: flex;
+    transform: translateX(var(--slide-transform));
+    transition: var(--transition);
+  }
+
+  .slider__container {
+    width: 300px;
+    margin: 0 auto;
+    border: 4px solid #000;
+    overflow: hidden;
+  }
+
+  .slider__element {
+    min-width: 100%;
+    height: 300px;
+    font-size: 3rem;
+    text-align: center;
+    line-height: 300px;
+  }
+
+  .slider__element--lightcoral {
+    background-color: lightcoral;
+  }
+
+  .slider__element--lightgreen {
+    background-color: lightgreen;
+  }
+
+  .slider__element--lightskyblue {
+    background-color: lightskyblue;
+  }
+
+  .slider__element--lightsalmon {
+    background-color: lightsalmon;
+  }
+</style>
