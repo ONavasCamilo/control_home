@@ -1,20 +1,33 @@
 <section>
-  <div id="slider-container" class="slider__container">
+  <div class="slider__container">
     <div id="slider" class="slider">
-      <div class="slider__element slider__element--lightcoral">1</div>
-      <div class="slider__element slider__element--lightgreen">2</div>
-      <div class="slider__element slider__element--lightskyeblue">3</div>
-      <div class="slider__element slider__element--lightsalmon">4</div>
+      <div class="slider__element">
+        <img src="/carousel1portada.jpg" alt="CARRUSEL1" class="slide active" />
+      </div>
+      <div class="slider__element">
+        <img src="/carousel2.png" alt="CARRUSEL2" class="slide" />
+      </div>
+      <div class="slider__element">
+        <img src="/carousel3.png" alt="CARRUSEL3" class="slide" />
+      </div>
+      <div class="slider__element">
+        <img src="/carousel4.jpg" alt="CARRUSEL4" class="slide" />
+      </div>
     </div>
   </div>
   <div class="slider-buttons">
     <button id="button-left" class="button button--left">{`<`}</button>
     <button id="button-right" class="button button--right">{`>`}</button>
   </div>
+  <div class="dots">
+    <span class="dot active"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
 </section>
 
 <script>
-  const sliderContainer = document.getElementById("slider-container");
   const slider = document.getElementById("slider");
   const buttonLeft = document.getElementById("button-left");
   const buttonRight = document.getElementById("button-right");
@@ -22,6 +35,8 @@
   const sliderElements = document.querySelectorAll(".slider__element");
 
   const rootStyles = document.documentElement.style;
+
+  const timeTransition = 500
 
   let slideCounter = 0;
   let isInTransition = false;
@@ -62,7 +77,7 @@
   const moveSlide = (direction: DirectionType) => {
     if (isInTransition) return;
     const transformValue = getTransformValue();
-    rootStyles.setProperty("--transition", "transform 1s");
+    rootStyles.setProperty("--transition", `transform ${timeTransition}ms`);
     isInTransition = true;
     if (direction === DIRECTION.LEFT) {
       rootStyles.setProperty(
@@ -84,12 +99,73 @@
 
   slider?.addEventListener("transitionend", reorderSlide);
   reorderSlide();
+
+  const slides = document.querySelectorAll(".slide");
+  const dots = document.querySelectorAll(".dot");
+
+  let currentIndex = 0;
+  let isTransitioning = false;
+
+
+  function updateSlider() {
+    slides.forEach((slide, i) => slide.classList.toggle("active", i === currentIndex));
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
+  }
+
+  function nextSlide() {
+    if (isTransitioning) return;
+    isTransitioning = true;
+    currentIndex = (currentIndex + 1) % slides.length;
+    updateSlider();
+    setTimeout(() => {
+      isTransitioning = false;
+    }, timeTransition);
+  }
+
+  function prevSlide() {
+    if (isTransitioning) return;
+    isTransitioning = true;
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    updateSlider();
+    setTimeout(() => {
+      isTransitioning = false;
+    }, timeTransition);
+  }
+
+  buttonRight?.addEventListener("click", nextSlide);
+  buttonLeft?.addEventListener("click", prevSlide);
+
+  updateSlider();
+
+  let autoSlideInterval: number;
+
+function startAutoSlide() {
+    autoSlideInterval = setInterval(nextSlide, 5000);
+}
+
+function resetAutoSlide() {
+    clearInterval(autoSlideInterval);
+    startAutoSlide();
+}
+
+startAutoSlide();
+
+buttonRight?.addEventListener('click', resetAutoSlide);
+buttonLeft?.addEventListener('click', resetAutoSlide);
+dots.forEach((dot) => dot.addEventListener('click', resetAutoSlide));
+setInterval(() => {
+  moveSlide(DIRECTION.RIGHT);
+}, 5000);
 </script>
 
 <style>
   :root {
     --slide-transform: 0;
     --transition: transform 1s;
+  }
+
+  img {
+    max-width: 100%;
   }
 
   .slider {
@@ -99,9 +175,13 @@
   }
 
   .slider__container {
-    width: 300px;
-    margin: 0 auto;
-    border: 4px solid #000;
+    width: 350px;
+    height: 350px;
+    margin: 20px auto;
+    border-radius: 7px;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(12, 139, 189, 0.35);
+    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4); */
     overflow: hidden;
   }
 
@@ -113,19 +193,48 @@
     line-height: 300px;
   }
 
-  .slider__element--lightcoral {
-    background-color: lightcoral;
+  .slider-buttons {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
   }
 
-  .slider__element--lightgreen {
-    background-color: lightgreen;
+  button {
+    border-radius: 50%;
+    border: 2px solid #329fd7;
+    background: rgba(35, 62, 212, 0.06);
+    color: #329fd7;
+    width: 45px;
+    height: 45px;
+    font-size: 27px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
   }
 
-  .slider__element--lightskyblue {
-    background-color: lightskyblue;
+  .button:hover {
+    background: #329fd7;
+    color: white;
   }
 
-  .slider__element--lightsalmon {
-    background-color: lightsalmon;
+  .dots {
+    position: absolute;
+    margin-top: -37px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .dot.active {
+    background: #329fd7;
   }
 </style>
