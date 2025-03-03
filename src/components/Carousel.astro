@@ -36,7 +36,7 @@
 
   const rootStyles = document.documentElement.style;
 
-  const timeTransition = 500
+  const timeTransition = 500;
 
   let slideCounter = 0;
   let isInTransition = false;
@@ -72,7 +72,7 @@
   };
 
   const getTransformValue = () =>
-    Number(rootStyles.getPropertyValue("--slide-transform").replace("px", "")); // convertimos a number y borramos 'px' para obtener valor dinamico
+    Number(rootStyles.getPropertyValue("--slide-transform").replace("px", "")); // convertimos a number y borramos 'px' para obtener el valor number correcto y dinamico
 
   const moveSlide = (direction: DirectionType) => {
     if (isInTransition) return;
@@ -106,10 +106,13 @@
   let currentIndex = 0;
   let isTransitioning = false;
 
-
   function updateSlider() {
-    slides.forEach((slide, i) => slide.classList.toggle("active", i === currentIndex));
-    dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
+    slides.forEach((slide, i) =>
+      slide.classList.toggle("active", i === currentIndex)
+    );
+    dots.forEach((dot, i) =>
+      dot.classList.toggle("active", i === currentIndex)
+    );
   }
 
   function nextSlide() {
@@ -137,25 +140,36 @@
 
   updateSlider();
 
-  let autoSlideInterval: number;
+  let startX = 0;
+  let endX = 0;
 
-function startAutoSlide() {
-    autoSlideInterval = setInterval(nextSlide, 5000);
-}
+  slider?.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+  });
 
-function resetAutoSlide() {
-    clearInterval(autoSlideInterval);
-    startAutoSlide();
-}
+  slider?.addEventListener("touchmove", (e) => {
+    endX = e.touches[0].clientX;
+  });
 
-startAutoSlide();
+  slider?.addEventListener("touchend", () => {
+    const diff = startX - endX;
 
-buttonRight?.addEventListener('click', resetAutoSlide);
-buttonLeft?.addEventListener('click', resetAutoSlide);
-dots.forEach((dot) => dot.addEventListener('click', resetAutoSlide));
-setInterval(() => {
-  moveSlide(DIRECTION.RIGHT);
-}, 5000);
+    if (Math.abs(diff) > 50) {
+      if (isTransitioning) return;
+      if (diff > 0) {
+        moveSlide(DIRECTION.RIGHT);
+        currentIndex = (currentIndex + 1) % slides.length;
+      } else {
+        moveSlide(DIRECTION.LEFT);
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      }
+      updateSlider();
+      isTransitioning = true;
+      setTimeout(() => {
+        isTransitioning = false;
+      }, timeTransition);
+    }
+  });
 </script>
 
 <style>
@@ -181,7 +195,6 @@ setInterval(() => {
     border-radius: 7px;
     background: white;
     box-shadow: 0px 4px 10px rgba(12, 139, 189, 0.35);
-    /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4); */
     overflow: hidden;
   }
 
@@ -231,10 +244,75 @@ setInterval(() => {
     height: 10px;
     background: #ccc;
     border-radius: 50%;
-    cursor: pointer;
   }
 
   .dot.active {
     background: #329fd7;
+  }
+
+  @media (min-width: 540px) {
+    .slider__container {
+      width: 450px;
+      height: 450px;
+    }
+
+    @media (min-width: 920px) {
+      section {
+        position: absolute;
+      }
+
+      .slider__container {
+        margin: 20px;
+      }
+
+      .slider-buttons {
+        justify-content: left;
+      }
+
+      button {
+        margin: 0 95px;
+      }
+
+      .dots {
+        left: 0;
+        margin: 0 245px;
+        margin-top: -37px;
+      }
+    }
+
+    @media (min-width: 1111px) {
+      .slider__container {
+        height: 560px;
+        width: 560px;
+        margin-top: 45px;
+        margin-left: 30px;
+      }
+
+      button {
+        margin: 0 125px;
+      }
+
+      .dots {
+        left: 0;
+        margin: 0 310px;
+        margin-top: -37px;
+      }
+    }
+
+    @media (min-width: 1910px) {
+      .slider__container {
+        height: 620px;
+        width: 620px;
+        margin-left: 130px;
+      }
+      button {
+        margin: 0 193px;
+      }
+
+      .dots {
+        margin: 0 438px;
+        margin-top: -37px;
+      }
+    }
   }
 </style>

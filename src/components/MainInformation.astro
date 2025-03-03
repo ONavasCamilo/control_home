@@ -1,0 +1,157 @@
+<div class="security-container">
+  <h2>Protege lo que más importa</h2>
+  <p>
+    <strong>La seguridad es una prioridad.</strong> Ya sea para tu hogar, familia
+    o negocio, contar con una cámara de seguridad te dará la tranquilidad que necesitas.
+  </p>
+  <p>
+    En nuestra tienda, encontrarás una <strong
+      >amplia variedad de cámaras de seguridad</strong
+    >:
+  </p>
+  <ul>
+    <li>
+      <img src="/iconHd.svg" alt="iconHD" />Cámaras IP de alta resolución.
+    </li>
+    <li>
+      <img src="/iconMovement.svg" alt="iconMovement" />Cámaras WiFi con
+      detección de movimiento.
+    </li>
+    <li>
+      <img src="/iconAlert.svg" alt="iconAlerMobile" />Funciones avanzadas como
+      grabación en la nube y alertas en tiempo real.
+    </li>
+  </ul>
+
+  <div id="extra-content" class="hidden">
+    <h2>Fácil instalación y máxima protección</h2>
+    <p>
+      Nuestras cámaras son <strong>fáciles de instalar y usar</strong>, para que
+      protejas tu hogar o negocio en minutos. Gracias a sus características
+      avanzadas, como
+      <strong>detección de movimiento</strong> y <strong
+        >notificaciones en tiempo real</strong
+      >, siempre estarás informado.
+    </p>
+
+    <h2>¡Elige la mejor opción para ti!</h2>
+    <p>
+      Si buscas una solución efectiva para la seguridad de tu hogar o negocio,
+      nuestras cámaras son la mejor opción. <strong
+        >¡Explora nuestra selección y protege tu tranquilidad hoy mismo!</strong
+      >
+    </p>
+  </div>
+  <button id="toggle-btn">Leer más..</button>
+</div>
+
+<script>
+  document.getElementById("toggle-btn")?.addEventListener("click", function () {
+    const extraContent = document.getElementById("extra-content");
+    if (!extraContent) return;
+    if (extraContent.classList.contains("hidden")) {
+      extraContent.classList.remove("hidden");
+      this.textContent = "Leer menos..";
+    } else {
+      extraContent.classList.add("hidden");
+      this.textContent = "Leer más..";
+    }
+  });
+</script>
+
+<style>
+  img {
+    margin-right: 7px;
+  }
+
+  .security-container {
+    margin: 18px 0;
+    padding: 15px 40px;
+    font-size: 14px;
+    background: #cee8f7d5;
+    border-radius: 8px;
+  }
+
+  h2 {
+    color: #329fd7;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  strong {
+    color: #329fd7;
+  }
+
+  ul {
+    padding-left: 20px;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    margin: 10px;
+  }
+
+  #extra-content.hidden {
+    display: none;
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #329fd7;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #2679a8;
+  }
+
+  @media (min-width: 920px) {
+    .security-container {
+      margin-top: 20px;
+      margin-left: 500px;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    button {
+      background: none;
+      color: #329fd7;
+    }
+
+    button:hover {
+      background: none;
+    }
+  }
+
+  @media (min-width: 1111px) {
+    .security-container {
+      background: none;
+      margin-left: 610px;
+      font-size: 1.2rem;
+    }
+  }
+
+  @media (min-width: 1910px) {
+    .security-container {
+      max-width: 940px;
+      margin-left: 810px;
+      line-height: 1.6;
+    }
+
+    #toggle-btn {
+      display: none;
+    }
+
+    #extra-content {
+      display: block !important;
+    }
+  }
+</style>
