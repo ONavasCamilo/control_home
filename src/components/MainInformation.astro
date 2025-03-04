@@ -46,16 +46,23 @@
 </div>
 
 <script>
-  document.getElementById("toggle-btn")?.addEventListener("click", function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("toggle-btn");
     const extraContent = document.getElementById("extra-content");
-    if (!extraContent) return;
-    if (extraContent.classList.contains("hidden")) {
-      extraContent.classList.remove("hidden");
-      this.textContent = "Leer menos..";
-    } else {
-      extraContent.classList.add("hidden");
-      this.textContent = "Leer más..";
-    }
+
+    if (!toggleBtn || !extraContent) return;
+
+    extraContent.style.transition = "max-height 0.3s ease-out";
+
+    toggleBtn.addEventListener("click", function () {
+      if (extraContent.style.maxHeight === "0px" || extraContent.style.maxHeight === "") {
+        extraContent.style.maxHeight = extraContent.scrollHeight + "px";
+        this.textContent = "Leer menos..";
+      } else {
+        extraContent.style.maxHeight = "0";
+        this.textContent = "Leer más..";
+      }
+    });
   });
 </script>
 
@@ -92,10 +99,6 @@
     margin: 10px;
   }
 
-  #extra-content.hidden {
-    display: none;
-  }
-
   button {
     margin-top: 10px;
     padding: 8px 12px;
@@ -109,6 +112,12 @@
 
   button:hover {
     background: #2679a8;
+  }
+
+  #extra-content {
+    display: block;
+    max-height: 0px;
+    overflow: hidden;
   }
 
   @media (min-width: 920px) {
@@ -152,6 +161,8 @@
 
     #extra-content {
       display: block !important;
+      max-height: max-content;
+      overflow: visible;
     }
   }
 </style>
